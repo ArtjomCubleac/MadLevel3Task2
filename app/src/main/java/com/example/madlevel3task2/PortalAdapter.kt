@@ -1,6 +1,7 @@
 package com.example.madlevel3task2
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +21,8 @@ class PortalAdapter(
             itemView.title_portal_card.text = portal.PortalTitle
             itemView.url_portal_card.text = portal.URL
             itemView.setOnClickListener { clickListener(portal) }
-
         }
     }
-
     /**
      * Creates and returns a ViewHolder object, inflating a standard layout called simple_list_item_1.
      */
@@ -32,14 +31,12 @@ class PortalAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.item_portal, parent, false)
         )
     }
-
     /**
      * Returns the size of the list
      */
     override fun getItemCount(): Int {
         return portals.size
     }
-
     /**
      * Called by RecyclerView to display the data at the specified position.
      */

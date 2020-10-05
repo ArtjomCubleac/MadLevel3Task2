@@ -3,7 +3,6 @@ package com.example.madlevel3task2
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,29 +29,25 @@ class PortalListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_portal_list, container, false)
-
-
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        observeAddReminderResult()
+        observeAddPortalResult()
     }
 
-    private fun observeAddReminderResult() {
+    private fun observeAddPortalResult() {
         setFragmentResultListener(REQ_PORTAL_KEY) { key, bundle ->
-            bundle.getString(BUNDLE_PORTAL_KEY)?.let {
-                val portal = Portal(it, it)
-                portals.add(portal)
+                val portal = bundle.getParcelable<Portal>(BUNDLE_PORTAL_KEY)
+                    portals.add(portal!!)
                 portalAdapter.notifyDataSetChanged()
-            } ?: Log.e("PortalListFragment", "Request triggered, but empty portal text!")
         }
     }
 
     private fun partItemClicked(portal: Portal) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(portal.PortalTitle))
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(portal.URL))
         startActivity(browserIntent)
     }
 
@@ -62,16 +57,11 @@ class PortalListFragment : Fragment() {
         rvPortals.adapter = portalAdapter
 
         createItemTouchHelper().attachToRecyclerView(rvPortals)
-
     }
 
     private fun createItemTouchHelper(): ItemTouchHelper {
-
-        // Callback which is used to create the ItemTouch helper. Only enables left swipe.
-        // Use ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) to also enable right swipe.
         val callback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
-
             // Enables or Disables the ability to move items up and down.
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -80,7 +70,6 @@ class PortalListFragment : Fragment() {
             ): Boolean {
                 return false
             }
-
             // Callback triggered when a user swiped an item.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
